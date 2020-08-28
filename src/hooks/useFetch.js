@@ -1,12 +1,41 @@
 import { useState, useEffect } from "react";
 
-const getRequestOptions = (
+const getNewToken = (clientId, clientSecret, username, password) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+  var urlencoded = new URLSearchParams();
+  urlencoded.append("grant_type", "password");
+  urlencoded.append("client_id", "5f47cbb9b167cf368e68d8ed");
+  urlencoded.append("client_secret", "qIfeMRbeFkUXTuhKsJI2ME7RuCXCTX9qvXD");
+  urlencoded.append("username", "amir.sarsenov@epitech.eu");
+  urlencoded.append("password", "9tyQKaTTbpv?6kx");
+  urlencoded.append("scope", "read_station");
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: urlencoded,
+    redirect: 'follow'
+  };
+
+  return fetch("https://api.netatmo.com/oauth2/token", requestOptions)
+    .then(response => response.text())
+    .then(result => {return JSON.parse(result).access_token})
+    .catch(error => console.log('error', error));
+}
+
+const getRequestOptions = async (
   method = 'GET',
   body = null,
   extraHeaders = {},
 ) => {
     const baseHeaders = { 'Content-Type': 'application/json' };
-    const token = process.env.NEXT_PUBLIC_NETATMO_TOKEN;
+    const token = await getNewToken(
+      process.env.netatmo_client_id,
+      process.env.netatmo_client_secret,
+      process.env.netatmo_username,
+      process.env.netatmo_password);
     const headers = {
       ...baseHeaders,
       authorization: `Bearer ${token}`,
@@ -23,7 +52,7 @@ async function request({
   serverContext,
 }) {
   try {
-    const call = await fetch(url, getRequestOptions(method, body, headers));
+    const call = await fetch(url, await getRequestOptions(method, body, headers));
     if (!call.ok) {
       const { status, statusText } = call;
       const errObj = { status, statusText};

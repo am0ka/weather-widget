@@ -6,6 +6,11 @@ export const MainWrapper = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
+  @media (min-width: 1024px) {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+  }
 `;
 
 export const CitySelector = styled.ul`
@@ -15,6 +20,10 @@ export const CitySelector = styled.ul`
   display: flex;
   justify-content: space-around;
   margin: .75rem;
+  @media (min-width: 1024px) {
+    font-size: 1.5rem;
+    padding: .75rem 1rem;
+  }
 `;
 
 export const CityOption = styled.li`
