@@ -1,18 +1,16 @@
 import { useState, useEffect } from "react";
 
-const getNewToken = (clientId, clientSecret, username, password) => {
-  var myHeaders = new Headers();
+const getNewToken = (clientId, clientSecret, refresh_token) => {
+  const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-  var urlencoded = new URLSearchParams();
-  urlencoded.append("grant_type", "password");
-  urlencoded.append("client_id", "5f47cbb9b167cf368e68d8ed");
-  urlencoded.append("client_secret", "qIfeMRbeFkUXTuhKsJI2ME7RuCXCTX9qvXD");
-  urlencoded.append("username", "amir.sarsenov@epitech.eu");
-  urlencoded.append("password", "9tyQKaTTbpv?6kx");
-  urlencoded.append("scope", "read_station");
+  const urlencoded = new URLSearchParams();
+  urlencoded.append("grant_type", "refresh_token");
+  urlencoded.append("client_id", clientId);
+  urlencoded.append("client_secret", clientSecret);
+  urlencoded.append("refresh_token", refresh_token);
 
-  var requestOptions = {
+  const requestOptions = {
     method: 'POST',
     headers: myHeaders,
     body: urlencoded,
@@ -32,10 +30,9 @@ const getRequestOptions = async (
 ) => {
     const baseHeaders = { 'Content-Type': 'application/json' };
     const token = await getNewToken(
-      process.env.netatmo_client_id,
-      process.env.netatmo_client_secret,
-      process.env.netatmo_username,
-      process.env.netatmo_password);
+      process.env.NETATMO_ID,
+      process.env.NETATMO_SECRET,
+      process.env.NETATMO_REFRESH_TOKEN);
     const headers = {
       ...baseHeaders,
       authorization: `Bearer ${token}`,
