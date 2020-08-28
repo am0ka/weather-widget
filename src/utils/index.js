@@ -21,7 +21,12 @@ function getIdealArray(obj) {
   if (data.length === 3) {
     rain = data[2].rain_24h;
   }
-  return {temp: temp, humid: humid, press: press, rain: rain};
+  return {
+    temp: temp,
+    humid: humid,
+    press: Math.round((press + Number.EPSILON) * 10) / 10,
+    rain: Math.round((rain + Number.EPSILON) * 100) / 100
+  };
 }
 
 export function getData(lat_ne, lon_ne, lat_sw, lon_sw) {
